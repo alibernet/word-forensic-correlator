@@ -1,14 +1,15 @@
-# Name W4C comes from ...
-W4C is short name for Word Forensic Correlator -> wor-for-cor -> wor4cor -> w4c.
-
 # What is W4C
 W4C is helper tool for forensic analyst to link MS word document back to specific 
  MS word installation by creating unique signature from internal word document fields.
 
+# Name W4C comes from ...
+W4C is short name for Word Forensic Correlator -> wor-for-cor -> wor4cor -> w4c.
+
 # Forensic Question
 W4C it doing its best to answer the forensic question: Were two (or more) MS Word
  documents last edited/saved on the same MS Word installation instance ?
- Note: sometimes the final answer 42 is not good enough :-)
+
+Note: sometimes the final answer 42 is not good enough :-)
 
 # How does it work
 W4C correlates some internal and not well documented Microsoft Word binary document 
@@ -84,4 +85,5 @@ W4C was originally implemented for my father (R.I.P.) working as certfied digita
 
 Hope it helps ...
 
+keywords: microsoft, word, doc, document, ms-word, ole2, digital, forensic, signature, correlate, compare
 
