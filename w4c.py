@@ -14,16 +14,16 @@ Microsoft Word binary document format structures [like FIB private/undocumented/
 
 In digital forensic evidence praxis, there are situations, where is desirable to link questionable
 documents to specific MS Word installation. As far as is known, MS Word does not provide any unique
-identification like serial number within document itself. W4C is trying to get the unique signature
-from files and by comparing these signatures could help to provide percentage hint to user.
+identification like serial number within document itself. W4C is trying to get the unique fingerprint
+from files and by comparing these fingerprints could help to provide percentage hint to user.
 
 W4C is correlation tool for comparing questionable document to reference document. The reference
 document is the document we know for sure was edited/saved with specific MS word installation.
 The forensic investigation should tell us if other questionable documents were also edited/saved
 with some percentage of probability with the same MS-word installation.
 
-W4C calculates internal signature from specific internal fields [can be customized] and then
-correlates/compares signature of reference file and tested file. The final matching result is
+W4C calculates internal fingerprint from specific internal fields [can be customized] and then
+correlates/compares fingerprint of reference file and tested file. The final matching result is
 calculated and shown as correlation percentage. This result could be used in forensic evidence
 as helper to proof that document(s) under investigation has/have been edited/saved on the same
 MS-word installation as known validated reference document.
@@ -36,7 +36,7 @@ edited and spoofed. Document size/formatting/contents should have no effect on W
 
 __author__  = 'robert'
 __date__    = '2015-03-01'
-__version__ = '1.0.5'
+__version__ = '1.0.6'
 
 import sys
 import os
@@ -51,7 +51,7 @@ class Correlator:
     # defaults
     verbosity = 4
 
-    signature = [ KEY_FIB_PVER, KEY_LANG_STAMP, KEY_CREATED_PRI, KEY_SAVED_PRI, KEY_CREATED_BUILD,
+    fingerprint = [ KEY_FIB_PVER, KEY_LANG_STAMP, KEY_CREATED_PRI, KEY_SAVED_PRI, KEY_CREATED_BUILD,
                   KEY_SAVED_BUILD,  '%s^%s' % (KEY_STLSHT_N, KEY_FOOTREF) ]
 
     def __init__(self, refdoc, tstdoc):
@@ -65,23 +65,23 @@ class Correlator:
         self.tst = WordFile(tstdoc)
         return
 
-    def set_signature(self, signature):
+    def set_fingerprint(self, fingerprint):
         """
-        set custom signature for correlation
+        set custom fingerprint for correlation
         :return:
         """
-        self.signature = signature
+        self.fingerprint = fingerprint
         return
 
-    def get_signature(self, src, frm='%04x', glue='-'):
+    def get_fingerprint(self, src, frm='%04x', glue='-'):
         """
-        get value of signature in hexadecimal format
+        get value of fingerprint in hexadecimal format
         :param src:  ref/tst document
         :param frm:  single key format (hexa)
         :param glue: how to glue keys
         :return:
         """
-        return glue.join([frm % self._eval_key(src, key) for key in self.signature])
+        return glue.join([frm % self._eval_key(src, key) for key in self.fingerprint])
 
     def _eval_key(self, src, key):
         """
@@ -101,15 +101,15 @@ class Correlator:
 
     def _percent_match(self):
         """
-        calculate correlation = signatures percentage match
+        calculate correlation = fingerprints percentage match
         :return: float percentage
         """
-        total = len(self.signature)
+        total = len(self.fingerprint)
         ok = 0
-        self.printout(5, '\n%30s %18s  %18s %s' % ('signature.field', 'reference.value', 'DUT/tested.value', 'result'))
+        self.printout(5, '\n%30s %18s  %18s %s' % ('fingerprint.field', 'reference.value', 'DUT/tested.value', 'result'))
         self.printout(5, '=' * 77)
 
-        for key in self.signature:
+        for key in self.fingerprint:
             ref = self._eval_key(self.ref, key)
             tst = self._eval_key(self.tst, key)
             if ref == tst: ok += 1
@@ -138,10 +138,11 @@ class Correlator:
             self.ref.hexdump()
             self.tst.hexdump()
         #
-        self.printout(3, '\nReference  document signature: %s' % (self.get_signature(self.ref)))
-        self.printout(3, 'Tested/DUT document signature: %s' % (self.get_signature(self.tst)))
+        self.printout(3, '\nReference  document fingerprint: %s' % (self.get_fingerprint(self.ref)))
+        self.printout(3, 'Tested/DUT document fingerprint: %s' % (self.get_fingerprint(self.tst)))
         #
-        self.printout(1, '\nTested/DUT doc signature is matching REF/reference doc signature for %.2f%%' % self._percent_match())
+        if self.ref.parsed() and self.tst.parsed():
+            self.printout(1, '\nTested/DUT doc fingerprint is matching REF/reference doc fingerprint for %.2f%%' % self._percent_match())
         return
 
     def printout(self, level, msg):
@@ -169,28 +170,28 @@ class Correlator:
         W4C correlates some internal MS-word doc structures to calculate percentage of probability that
         document under test [test.doc] was edited with the same MS-word version as reference doc [ref.doc]
 
-        usage: %s [-help ][-verbosity int ][-signature csv ] -ref ref.doc test.doc
+        usage: %s [-help ][-verbosity int ][-fingerprint csv ] -ref ref.doc test.doc
 
-        help          ... show this usage help
-        verbosity int ... optional - set level of verbosity to integer value [default 3]
-        signature csv ... optional - use csv fields to calculate signature [see bellow for defaults]
-        ref ref.doc   ... reference ms word document
-        test.doc      ... documents under test will be correlated to reference one
+        help            ... show this usage help
+        verbosity int   ... optional - set level of verbosity to integer value [default 3]
+        fingerprint csv ... optional - use csv fields to calculate fingerprint [see bellow for defaults]
+        ref ref.doc     ... reference ms word document
+        test.doc        ... documents under test will be correlated to reference one
 
-        Default Signature definition:
+        Default fingerprint definition:
         %s
 
-        Signature fields available for CSV:
+        fingerprint fields available for CSV:
         %s
 
-        Supported Signature fields logical operators:
+        Supported fingerprint fields logical operators:
         ^ = xor, | = or, & = and
 
         Single letters instead of descriptive keyword could be used like:
         -v = -verbosity
-        -s = -signature
+        -f = -fingerprint
         -r = -ref
-        """ % (__version__, __author__, os.path.basename(argv[0]), '-'.join(cls.signature), ', '.join(list_keys))
+        """ % (__version__, __author__, os.path.basename(argv[0]), '-'.join(cls.fingerprint), ', '.join(list_keys))
         sys.exit(1)
         return
 
@@ -224,10 +225,10 @@ class Correlator:
                 cls.verbosity = level
                 continue
 
-            # signature csv
-            if par in ['-s', '-sig', '-signature']:
+            # fingerprint csv
+            if par in ['-f', '-fingerprint']:
                 csv = next(it)
-                cls.signature = [x.strip() for x in csv.split(',')]
+                cls.fingerprint = [x.strip() for x in csv.split(',')]
                 continue
 
             # ref doc

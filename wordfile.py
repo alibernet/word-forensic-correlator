@@ -13,7 +13,7 @@ Word File is helper module for W4C = Word Forensic Correlator = wor-for-cor = wo
 
 __author__  = 'robert'
 __date__    = '2015-03-01'
-__version__ = '1.0.5'
+__version__ = '1.0.6'
 
 import struct
 import traceback
@@ -203,16 +203,23 @@ class WordFile:
 
         return
 
+    def parsed(self):
+        """
+        doc was parsed into dictionary
+        :return:
+        """
+        return len(self.doc) > 0
+
     def valid_doc(self):
         """
         validate few internal magic numbers to validate if parsed file is word document
         :param f:
         :return:
         """
-        return  self.assert_equal(self.doc[KEY_DOC_MAGIC], OLE2_MAGIC, None) \
-            and self.assert_equal(self.doc[KEY_FIB_MAGIC], FIB_MAGIC, None) \
-            and self.assert_equal(self.doc[KEY_CREATED_MAGIC], WORD_MAGIC, None) \
-            and self.assert_equal(self.doc[KEY_SAVED_MAGIC], WORD_MAGIC, None)
+        return  self.assert_equal(self.get(KEY_DOC_MAGIC), OLE2_MAGIC, None) \
+            and self.assert_equal(self.get(KEY_FIB_MAGIC), FIB_MAGIC, None) \
+            and self.assert_equal(self.get(KEY_CREATED_MAGIC), WORD_MAGIC, None) \
+            and self.assert_equal(self.get(KEY_SAVED_MAGIC), WORD_MAGIC, None)
 
     def assert_equal(self, actual, expected, msg='ERROR: actual($actual) != expected($expected)'):
         """
@@ -263,4 +270,4 @@ class WordFile:
         :param key:
         :return:
         """
-        return self.doc.get(key)
+        return self.doc.get(key, 0)
