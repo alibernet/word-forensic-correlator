@@ -1,7 +1,9 @@
 # What is W4C
 W4C is helper tool for forensic analyst to link MS word document back to specific 
- MS word installation by creating unique fingerprint from internal word document fields.
+ MS word installation by creating unique fingerprint from internal binary word document fields.
 
+Stay tuned to more updates coming to W4C ms word forensic fingerprinting ...
+ 
 # Name W4C comes from ...
 W4C is short name for Word Forensic Correlator -> wor-for-cor -> wor4cor -> w4c.
 
@@ -22,7 +24,7 @@ W4C is not using well-known MS Word metadata (like author, dates, version), whic
  edited and spoofed. Document size/formatting/contents should have no effect on W4C correlation.
 
 # Requirements
-python 2.x installed, will try to provide GUI and self-contained exe later
+python 2.x installed, will try to provide GUI later
 
 # How to use
 Model situation: you have one (or more) reference document which was saved/edited on 
@@ -79,6 +81,10 @@ As far as is known, MS Word does not provide any unique identification (like ser
  Also through the time the installed service packs and settings will change which will result to different fingerprint. 
  Therefore it is recommended to use reference document from time range close to questionable ones to eliminate such error. 
  
+# Windows Executable
+Windows 32 bit executable compiled by py2exe is provided in [release] tab. Download w4c-exe.zip package and unpack
+ to the working directory to get 3 files (library.zip, python27.dll, w4c.exe). Then just execute w4c to get usage help.
+
 # History
 W4C was originally implemented for my father (R.I.P.) working as certified digital forensic analyst. I have decided
  to release it to public just recently in 2015 as I was not able to find any similar tool out there. 
