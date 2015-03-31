@@ -38,35 +38,35 @@ $ python w4c.py
 
 To get usage help, use -help or execute without any parameters:
 
-    (c) 2015 W4C = MS Word Forensic Correlator [wor-for-cor] version 1.0.5 by robert
-    
-    W4C correlates some internal MS-word doc structures to calculate percentage of probability that
-    document under test [test.doc] was edited with the same MS-word version as reference doc [ref.doc]
-    
-    usage: w4c.py [-help ][-verbosity int ][-fingerprint csv ] -ref ref.doc test.doc
-    
-    help            ... show this usage help
-    verbosity int   ... optional - set level of verbosity to integer value [default 3]
-    fingerprint csv ... optional - use csv fields to calculate fingerprint [see bellow for defaults]
-    ref ref.doc     ... reference ms word document
-    test.doc        ... documents under test will be correlated to reference one
-    
-    Default fingerprint definition:
-    product.written.by-language.stamp-created.private-saved.private-created.build-saved.build-stylesheet.len^footref.off
-    
-    fingerprint fields available for CSV:
-    fingerprint.magic, created.env, flags.env, fib.magic, fib.ver, product.written.by, language.stamp, autotext.offset, 
-    flags.doc, fib.min, created.magic, saved.magic, created.private, saved.private, charset.doc, charset.int, saved.build, 
-    created.build, key.head.xor, text.offset, stylesheet0.off, stylesheet0.len, stylesheet.off, stylesheet.len, 
-    footref.off, footref.len
-    
-    Supported fingerprint fields logical operators:
-    ^ = xor, | = or, & = and
-    
-    Single letters instead of descriptive keyword could be used like:
-    -v = -verbosity
-    -f = -fingerprint
-    -r = -ref
+        (c) 2015 W4C = MS Word Forensic Correlator [wor-for-cor] version 1.0.6 by robert
+
+        W4C correlates some internal MS-word doc structures to calculate percentage of probability that
+        document under test [test.doc] was edited with the same MS-word version as reference doc [ref.doc]
+
+        usage: w4c.py [-help ][-verbosity int ][-fingerprint csv ] -ref ref.doc test.doc
+
+        help            ... show this usage help
+        verbosity int   ... optional - set level of verbosity to integer value [default 3]
+        fingerprint csv ... optional - use csv fields to calculate fingerprint [see bellow for defaults]
+        ref ref.doc     ... reference ms word document
+        test.doc        ... documents under test will be correlated to reference one
+
+        Default fingerprint definition:
+        product.written.by-language.stamp-created.private-saved.private-created.build-saved.build-stylesheet.len^footref.off
+
+        Fields available for fingerprint CSV:
+        signature.magic, created.env, flags.env, fib.magic, fib.ver, product.written.by, language.stamp, autotext.offset,
+        flags.doc, fib.min, created.magic, saved.magic, created.private, saved.private, charset.doc, charset.int, 
+        saved.build, created.build, key.head.xor, text.offset, stylesheet0.off, stylesheet0.len, stylesheet.off, 
+        stylesheet.len, footref.off, footref.len
+
+        Supported fingerprint fields logical operators:
+        ^ = xor, | = or, & = and
+
+        Single letters instead of descriptive keyword could be used like:
+        -v = -verbosity
+        -f = -fingerprint
+        -r = -ref
 
 # Pros
 W4C by using not well known structures should be more tamper/forgery resistant than any other known forensic tools.

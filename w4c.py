@@ -181,7 +181,7 @@ class Correlator:
         Default fingerprint definition:
         %s
 
-        fingerprint fields available for CSV:
+        Fields available for fingerprint CSV:
         %s
 
         Supported fingerprint fields logical operators:
