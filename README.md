@@ -82,7 +82,7 @@ As far as is known, MS Word does not provide any unique identification (like ser
  Therefore it is recommended to use reference document from time range close to questionable ones to eliminate such error. 
  
 # Windows Executable
-Windows 32 bit executable compiled by py2exe is provided in [release] tab. Download w4c-exe.zip package and unpack
+Windows 32 bit executable compiled by py2exe is provided in [release](releases) tab. Download w4c-exe.zip package and unpack
  to the working directory to get 3 files (library.zip, python27.dll, w4c.exe). Then just execute w4c to get usage help.
 
 # History
