@@ -27,7 +27,7 @@ W4C is not using well-known MS Word metadata (like author, dates, version), whic
 CLI version: w4c.py python 2.x installed
 GUI version: w4c-gui.py python 2.x, tkinter installed
 
-## How to use
+## How to use w4c - CLI version
 Model situation: you have one (or more) reference document which was saved/edited on 
  specific MS Word installation under investigation. Now you can use W4C to correlate
  other questionable documents and verify if they were also saved/edited on this MS Word
@@ -70,6 +70,14 @@ To get usage help, use -help or execute without any parameters:
         -v = -verbosity
         -f = -fingerprint
         -r = -ref
+
+## How to use w4c-gui.py - GUI version
+Just start GUI version by executing w4c-gui.py:
+
+$ ./w4c-gui.py
+
+Note: in case of problems make sure tkinter is installed and themes are configured (ubuntu/kubuntu has broken themes),
+ see [_tkinter.TclError](https://jehurst.wordpress.com/tag/tk-interface/) for more details how to fix broken tkinter theme.
 
 ## Pros
 W4C by using not well known structures should be more tamper/forgery resistant than any other known forensic tools.
