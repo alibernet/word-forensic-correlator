@@ -27,7 +27,7 @@ W4C is not using well-known MS Word metadata (like author, dates, version), whic
 CLI version: w4c.py python 2.x installed
 GUI version: w4c-gui.py python 2.x, tkinter installed
 
-## How to use w4c - CLI version
+## How to use w4c.py - CLI version
 Model situation: you have one (or more) reference document which was saved/edited on 
  specific MS Word installation under investigation. Now you can use W4C to correlate
  other questionable documents and verify if they were also saved/edited on this MS Word
