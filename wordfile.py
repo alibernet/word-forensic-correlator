@@ -11,9 +11,9 @@ Word File is helper module for W4C = Word Forensic Correlator = wor-for-cor = wo
 
 """
 
-__author__  = 'robert'
-__date__    = '2015-03-01'
-__version__ = '1.0.6'
+__author__  = 'Robert'
+__email__   = 'robert.puskajler@yahoo.ca'
+__version__ = '2.0.1'
 
 import struct
 import traceback
@@ -37,9 +37,9 @@ KEY_DOC_MAGIC       = 'signature.magic'
 #
 KEY_FIB_MAGIC       = 'fib.magic'
 KEY_FIB_VER         = 'fib.ver'
-KEY_FIB_PVER        = 'product.written.by'
-KEY_LANG_STAMP      = 'language.stamp'
-KEY_AUTO_TEXT       = 'autotext.offset'
+KEY_FIB_PVER        = 'product.ver'
+KEY_LANG_STAMP      = 'lang.stamp'
+KEY_AUTO_TEXT       = 'autotext.off'
 KEY_FLAGS_DOC       = 'flags.doc'
 KEY_FIB_MIN         = 'fib.min'
 KEY_HEAD_XOR        = 'key.head.xor'
@@ -50,7 +50,7 @@ KEY_CHARSET_INT     = 'charset.int'
 KEY_TXT_OFFSET      = 'text.offset'
 #
 KEY_CREATED_MAGIC   = 'created.magic'
-KEY_CREATED_PRI     = 'created.private'
+KEY_CREATED_PRI     = 'created.priv'
 KEY_CREATED_BUILD   = 'created.build'
 KEY_SAVED_MAGIC     = 'saved.magic'
 #
@@ -61,7 +61,7 @@ KEY_STLSHT_N        = 'stylesheet.len'
 KEY_FOOTREF         = 'footref.off'
 KEY_FOOTREF_N       = 'footref.len'
 #
-KEY_SAVED_PRI       = 'saved.private'
+KEY_SAVED_PRI       = 'saved.priv'
 KEY_SAVED_BUILD     = 'saved.build'
 
 
@@ -216,7 +216,8 @@ class WordFile:
         :param f:
         :return:
         """
-        return  self.assert_equal(self.get(KEY_DOC_MAGIC), OLE2_MAGIC, None) \
+        return  self.parsed() \
+            and self.assert_equal(self.get(KEY_DOC_MAGIC), OLE2_MAGIC, None) \
             and self.assert_equal(self.get(KEY_FIB_MAGIC), FIB_MAGIC, None) \
             and self.assert_equal(self.get(KEY_CREATED_MAGIC), WORD_MAGIC, None) \
             and self.assert_equal(self.get(KEY_SAVED_MAGIC), WORD_MAGIC, None)

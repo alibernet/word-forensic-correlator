@@ -24,7 +24,8 @@ W4C is not using well-known MS Word metadata (like author, dates, version), whic
  edited and spoofed. Document size/formatting/contents should have no effect on W4C correlation.
 
 ## Requirements
-python 2.x installed, will try to provide GUI later
+CLI version: w4c.py python 2.x installed
+GUI version: w4c-gui.py python 2.x, tkinter installed
 
 ## How to use
 Model situation: you have one (or more) reference document which was saved/edited on 
@@ -40,7 +41,7 @@ $ python w4c.py
 
 To get usage help, use -help or execute without any parameters:
 
-        (c) 2015 W4C = MS Word Forensic Correlator [wor-for-cor] version 1.0.6 by robert
+        (c) 2015 W4C = MS Word Forensic Correlator [wor-for-cor] version 2.0.1 by robert
 
         W4C correlates some internal MS-word doc structures to calculate percentage of probability that
         document under test [test.doc] was edited with the same MS-word version as reference doc [ref.doc]
@@ -91,5 +92,6 @@ W4C was originally implemented for my father (R.I.P.) working as certified digit
 
 Hope it helps ...
 
-keywords: microsoft, word, doc, document, ms-word, ole2, digital, forensic, fingerprint, correlate, compare, signature
+####keywords: 
+microsoft, word, doc, document, ms-word, ole2, digital, forensic, fingerprint, correlate, compare, signature
 

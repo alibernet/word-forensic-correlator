@@ -12,6 +12,8 @@ W4C = Word Forensic Correlator = wor-for-cor = wor4cor = w4c
 (c) 2015 W4C = MS Word Forensic Correlator W4C correlates some internal [and not well documented]
 Microsoft Word binary document format structures [like FIB private/undocumented/reserved fields].
 
+This is a console version of forensic correlator. For user friendly GUI version check w4c-gui.py
+
 In digital forensic evidence praxis, there are situations, where is desirable to link questionable
 documents to specific MS Word installation. As far as is known, MS Word does not provide any unique
 identification like serial number within document itself. W4C is trying to get the unique fingerprint
@@ -34,120 +36,119 @@ edited and spoofed. Document size/formatting/contents should have no effect on W
 
 """
 
-__author__  = 'robert'
-__date__    = '2015-03-01'
-__version__ = '1.0.6'
+__author__  = 'Robert'
+__email__   = 'robert.puskajler@yahoo.ca'
+__version__ = '2.0.1'
 
 import sys
 import os
 
 from wordfile import *
+import wordfingerprint as wordfp
 
 class Correlator:
     """
-    W4C correlator class
+    Forensic Correlator class
     """
 
     # defaults
+    refdocfp  = None
+    tstdocfp  = None
     verbosity = 4
 
-    fingerprint = [ KEY_FIB_PVER, KEY_LANG_STAMP, KEY_CREATED_PRI, KEY_SAVED_PRI, KEY_CREATED_BUILD,
-                  KEY_SAVED_BUILD,  '%s^%s' % (KEY_STLSHT_N, KEY_FOOTREF) ]
-
-    def __init__(self, refdoc, tstdoc):
+    def setdoc(self, docname, isref=False):
         """
-        constructor
-        :param refdoc: reference doc filename
-        :param tstdoc: tested doc filename
+        set document euther reference or inspected/tested one
+        :param docname: document filename
+        :param isref: boolean if doc is reference doc or inspected doc
         :return:
         """
-        self.ref = WordFile(refdoc)
-        self.tst = WordFile(tstdoc)
+        if isref:
+            self.refdocfp = wordfp.WordFingerprint(docname)
+        else:
+            self.tstdocfp = wordfp.WordFingerprint(docname)
         return
 
-    def set_fingerprint(self, fingerprint):
+    def getmd5(self, isref=False):
         """
-        set custom fingerprint for correlation
-        :return:
+        get formatted md5 hash
+        :param isref: boolean if doc is reference doc or inspected doc
+        :return: string
         """
-        self.fingerprint = fingerprint
-        return
+        return self.refdocfp.md5_formatted() if isref else self.tstdocfp.md5_formatted()
 
-    def get_fingerprint(self, src, frm='%04x', glue='-'):
+    def getfingerprint(self, isref=False):
         """
-        get value of fingerprint in hexadecimal format
-        :param src:  ref/tst document
-        :param frm:  single key format (hexa)
-        :param glue: how to glue keys
-        :return:
+        get formatted forensic fingerprint
+        :param isref: boolean if doc is reference doc or inspected doc
+        :return: string
         """
-        return glue.join([frm % self._eval_key(src, key) for key in self.fingerprint])
+        return self.refdocfp.fp_formatted() if isref else self.tstdocfp.fp_formatted()
 
-    def _eval_key(self, src, key):
+    def getvalidity(self, isref=False):
         """
-        evaluate key if logical operator is used
-        :param src:
-        :param key: keyname or logical expression
-        :return:
+        get basic ole2 stream validation result
+        :param isref: boolean if doc is reference doc or inspected doc
+        :return: string describing validation result
         """
-        for oper in '^|&':
-            if oper not in key: continue
-            l,r = key.split(oper)
-            l,r = l.strip(),r.strip()
-            if oper == '^': return src.get(l) ^ src.get(r)
-            if oper == '&': return src.get(l) & src.get(r)
-            if oper == '|': return src.get(l) | src.get(r)
-        return src.get(key)
+        valid = self.refdocfp.wfile.valid_doc() if isref else self.tstdocfp.wfile.valid_doc()
+        return 'valid MS-Word/OLE2 document' if valid else 'NOT valid MS-Word/OLE2 document'
 
-    def _percent_match(self):
+    def cancorrelate(self):
         """
-        calculate correlation = fingerprints percentage match
-        :return: float percentage
+        correlator needs reference and inspected doc for calculating result
+        :return: boolean
         """
-        total = len(self.fingerprint)
-        ok = 0
-        self.printout(5, '\n%30s %18s  %18s %s' % ('fingerprint.field', 'reference.value', 'DUT/tested.value', 'result'))
-        self.printout(5, '=' * 77)
+        return self.refdocfp is not None and self.tstdocfp is not None
 
-        for key in self.fingerprint:
-            ref = self._eval_key(self.ref, key)
-            tst = self._eval_key(self.tst, key)
+    def percent_match(self):
+        """
+        calculate correlation match based on formula - compare ref.doc and tested.doc
+        :return: float percentage correlation match
+        """
+        # stdout - matching table header
+        self.printout(5, '\n%30s %8s %8s %s' % ('fingerprint.field', 'ref.val', 'test.val', 'result'))
+        self.printout(5, '=' * 55)
+        # percent calc init
+        total = ok = 0
+        for key in self.refdocfp.formula:
+            total += 1
+            ref = self.refdocfp._eval_key(key)
+            tst = self.tstdocfp._eval_key(key)
             if ref == tst: ok += 1
-            # details about matching per key
-            self.printout(5, '%30s ref.value=0x%06x test.value=0x%06x %s'  % (key, ref, tst, 'match' if ref == tst else '< diff'))
+            # stdout - details about matching per key
+            self.printout(5, '%30s 0x%06x 0x%06x %s'  % (key, ref, tst, 'match' if ref == tst else '< diff'))
         # calc percentage
-        return 100.0*ok/total
+        return 100.0*ok/total if total>0 else 0
 
     def correlate(self):
         """
-        main method for correlation - contains flow and printouts status
+        main method for console (non GUI) correlation - contains flow and stdout printouts status
         :return:
         """
         # REF DOC
-        self.printout(2, '\nReference  document %s' % (self.ref.docname))
-        self.ref.parse()
-        self.printout(4, 'Validate REF/reference doc: %s\n' % 'OK - valid doc' if self.ref.valid_doc() else 'ERR - invalid doc')
+        self.printout(2, '\nReference  document %s' % (self.refdocfp.fname))
+        self.printout(4, 'Validate REF/reference doc: %s\n' % self.getvalidity(isref=True))
 
         # TEST DOC
-        self.printout(2, 'Tested/DUT document %s' % (self.tst.docname))
-        self.tst.parse()
-        self.printout(4, 'Validate DUT/tested doc: %s\n' % 'OK - valid doc' if self.tst.valid_doc() else 'ERR - invalid doc')
+        self.printout(2, 'Tested/DUT document %s' % (self.tstdocfp.fname))
+        self.printout(4, 'Validate DUT/tested doc: %s\n' % self.getvalidity(isref=False))
 
         # data dump
         if self.verbosity >= 6:
-            self.ref.hexdump()
-            self.tst.hexdump()
+            self.refdocfp.wfile.hexdump()
+            self.tstdocfp.wfile.hexdump()
         #
-        self.printout(3, '\nReference  document fingerprint: %s' % (self.get_fingerprint(self.ref)))
-        self.printout(3, 'Tested/DUT document fingerprint: %s' % (self.get_fingerprint(self.tst)))
+        self.printout(3, '\nReference  document fingerprint: %s' % (self.getfingerprint(isref=True)))
+        self.printout(3, 'Tested/DUT document fingerprint: %s'   % (self.getfingerprint(isref=False)))
         #
-        if self.ref.parsed() and self.tst.parsed():
-            self.printout(1, '\nTested/DUT doc fingerprint is matching REF/reference doc fingerprint for %.2f%%' % self._percent_match())
+        if self.cancorrelate():
+            self.printout(1, '\nInspected/DUT doc fingerprint is matching REF/reference doc fingerprint for %.2f%%' % self.percent_match())
         return
 
     def printout(self, level, msg):
         """
-        helper to print only if level is equal or over defined verbosity
+        helper to print message to stdout only if verbosity >= level
         :param level:
         :param msg: text to print
         :return:
@@ -165,7 +166,7 @@ class Correlator:
         """
         list_keys = [', '.join(l) for s,l in WordFile.known_keys.items()]
         print """
-        (c) 2015 W4C = MS Word Forensic Correlator [wor-for-cor] version %s by %s
+        (c) 2015 W4C = MS Word Forensic Correlator [wor-for-cor] console version %s by %s
 
         W4C correlates some internal MS-word doc structures to calculate percentage of probability that
         document under test [test.doc] was edited with the same MS-word version as reference doc [ref.doc]
@@ -176,12 +177,12 @@ class Correlator:
         verbosity int   ... optional - set level of verbosity to integer value [default 3]
         fingerprint csv ... optional - use csv fields to calculate fingerprint [see bellow for defaults]
         ref ref.doc     ... reference ms word document
-        test.doc        ... documents under test will be correlated to reference one
+        test.doc        ... inspected documents under test will be correlated to reference one
 
-        Default fingerprint definition:
+        Default fingerprint formula definition:
         %s
 
-        Fields available for fingerprint CSV:
+        Fields available for fingerprint formula listed as CSV:
         %s
 
         Supported fingerprint fields logical operators:
@@ -191,7 +192,7 @@ class Correlator:
         -v = -verbosity
         -f = -fingerprint
         -r = -ref
-        """ % (__version__, __author__, os.path.basename(argv[0]), '-'.join(cls.fingerprint), ', '.join(list_keys))
+        """ % (__version__, __author__, os.path.basename(argv[0]), wordfp.WordFingerprint.get_formula(','), ', '.join(list_keys))
         sys.exit(1)
         return
 
@@ -206,8 +207,11 @@ class Correlator:
         if len(argv) < 4:
             cls.usage(argv)
 
-        # parse arguments
+        # console correlator
+        cor = Correlator()
         ref = None
+
+        # parse arguments
         it = iter(argv[1:])
         for par in it:
 
@@ -222,25 +226,27 @@ class Correlator:
             # verbosity level
             if par in ['-v', '-verbosity']:
                 level = int(next(it))
-                cls.verbosity = level
+                cor.verbosity = level
                 continue
 
             # fingerprint csv
             if par in ['-f', '-fingerprint']:
                 csv = next(it)
-                cls.fingerprint = [x.strip() for x in csv.split(',')]
+                wordfp.WordFingerprint.set_formula( [x.strip() for x in csv.split(',')] )
                 continue
 
             # ref doc
             if par in ['-r', '-ref', '-reference', '-m', '-master']:
                 ref = next(it)
+                cor.setdoc(ref, isref=True)
                 continue
 
             # test doc
             if ref is None:
                 cls.usage(argv)
+
             # correlate
-            cor = Correlator(ref, par)
+            cor.setdoc(par, isref=False)
             cor.correlate()
 
         return
