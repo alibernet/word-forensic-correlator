@@ -4,10 +4,10 @@ W4C is helper tool for forensic analyst to link MS word document back to specifi
 
 Stay tuned to more updates coming to W4C ms word forensic fingerprinting ...
  
-## Name W4C comes from ...
+### Name W4C comes from ...
 W4C is short name for Word Forensic Correlator -> wor-for-cor -> wor4cor -> w4c.
 
-## Forensic Question
+### Forensic Question
 W4C it doing its best to answer the forensic question: Were two (or more) MS Word
  documents last edited/saved on the same MS Word installation instance ?
 
@@ -23,17 +23,29 @@ W4C correlates some internal and not well documented Microsoft Word binary docum
 W4C is not using well-known MS Word metadata (like author, dates, version), which can be easily
  edited and spoofed. Document size/formatting/contents should have no effect on W4C correlation.
 
-## Requirements
-CLI version: w4c.py python 2.x installed
-GUI version: w4c-gui.py python 2.x, tkinter installed
+### Requirements
+CLI version: w4c.py     ... python 2.x installed
+GUI version: w4c-gui.py ... python 2.x, tkinter installed
 
-## How to use w4c.py - CLI version
+Note: self-contained py2exe compiled packages have all dependencies packaged inside package.
+ To download windows executable package go to the [release](releases) tab.
+ 
+### Files
+    w4c.py              ... CLI version
+    w4c-gui.py          ... GUI version
+    wordfile.py         ... module for OLE2
+    wordfingerprint.py  ... module for fingerprinting
+    py2exe/             ... directory for py2exe
+    py2exe/setup/py     ... to compile w4c.exe package
+    py2exe/setup-gui.py ... to compile w4c-gui.exe package
+
+### How to use CLI version: w4c.py
 Model situation: you have one (or more) reference document which was saved/edited on 
  specific MS Word installation under investigation. Now you can use W4C to correlate
  other questionable documents and verify if they were also saved/edited on this MS Word
  installation:
 
-$ ./w4c.py -ref my_reference.doc under_question.doc
+$ ./w4c.py -ref reference.doc investigated.doc
 
 Note: in case of problems try: 
 
@@ -71,35 +83,39 @@ To get usage help, use -help or execute without any parameters:
         -f = -fingerprint
         -r = -ref
 
-## How to use w4c-gui.py - GUI version
-Just start GUI version by executing w4c-gui.py:
+### How to use GUI version: w4c-gui.py
+Just start GUI version by executing w4c-gui.py. Then select reference and inspected files through BROWSE button.
+After the file is selected, validation result, MD5 hash and forensic fingerprint are shown. When both files are
+already selected the final correlation percentage is calculated and shown.
 
 $ ./w4c-gui.py
 
 Note: in case of problems make sure tkinter is installed and themes are configured (ubuntu/kubuntu has broken themes),
- see [_tkinter.TclError](https://jehurst.wordpress.com/tag/tk-interface/) for more details how to fix broken tkinter theme.
+ see [_tkinter.TclError](https://jehurst.wordpress.com/tag/tk-interface/) for more details how to fix broken tkinter themes.
+ 
+### Windows Executable
+For your convenience Windows 32 bit executables compiled by py2exe are provided in [release](releases) tab. Download the package and unpack it to the working dir.
 
-## Pros
+    w4c-exe.zip is CLI version in single executable file
+    w4c-gui.zip is GUI version with all the dependencies
+     
+#### Pros
 W4C by using not well known structures should be more tamper/forgery resistant than any other known forensic tools.
  However, please read section bellow to understand the limits.
 
-## Cons, Limits
+#### Cons, Limits
 As far as is known, MS Word does not provide any unique identification (like serial number) within document itself. 
  W4C is trying its best to get the unique fingerprint from document file but there is still probability for false positives.
  Exactly the same MS Word installation (and service packs levels and settings) will provide matching fingerprint.
  Also through the time the installed service packs and settings will change which will result to different fingerprint. 
  Therefore it is recommended to use reference document from time range close to questionable ones to eliminate such error. 
- 
-## Windows Executable
-Windows 32 bit executable compiled by py2exe is provided in [release](releases) tab. Download w4c-exe.zip package and unpack
- to the working directory to get 3 files (library.zip, python27.dll, w4c.exe). Then just execute w4c to get usage help.
 
-## History
+#### History
 W4C was originally implemented for my father (R.I.P.) working as certified digital forensic analyst. I have decided
  to release it to public just recently in 2015 as I was not able to find any similar tool out there. 
 
 Hope it helps ...
 
-####keywords: 
+#####keywords: 
 microsoft, word, doc, document, ms-word, ole2, digital, forensic, fingerprint, correlate, compare, signature
 
