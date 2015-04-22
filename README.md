@@ -25,9 +25,10 @@ W4C is not using well-known MS Word metadata (like author, dates, version), whic
 
 ### Requirements
 CLI version: w4c.py     ... python 2.x installed
+
 GUI version: w4c-gui.py ... python 2.x, tkinter installed
 
-Note: self-contained py2exe compiled packages have all dependencies packaged inside package.
+**Note:** self-contained py2exe compiled packages have all dependencies packaged inside package.
  To download windows executable package go to the [release](releases) tab.
  
 ### Files
@@ -108,7 +109,7 @@ As far as is known, MS Word does not provide any unique identification (like ser
  W4C is trying its best to get the unique fingerprint from document file but there is still probability for false positives.
  Exactly the same MS Word installation (and service packs levels and settings) will provide matching fingerprint.
  Also through the time the installed service packs and settings will change which will result to different fingerprint. 
- Therefore it is recommended to use reference document from time range close to questionable ones to eliminate such error. 
+ Therefore it is recommended to use reference document from time range close to questionable ones to eliminate such errors. 
 
 #### History
 W4C was originally implemented for my father (R.I.P.) working as certified digital forensic analyst. I have decided
@@ -116,6 +117,5 @@ W4C was originally implemented for my father (R.I.P.) working as certified digit
 
 Hope it helps ...
 
-#####keywords: 
-microsoft, word, doc, document, ms-word, ole2, digital, forensic, fingerprint, correlate, compare, signature
+**keywords:** microsoft, word, doc, document, ms-word, ole2, digital, forensic, fingerprint, correlate, compare, signature
 
