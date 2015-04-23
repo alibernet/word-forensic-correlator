@@ -8,8 +8,10 @@ Stay tuned to more updates coming to W4C ms word forensic fingerprinting ...
 **W4C** is short name for **Word Forensic Correlator** -> wor-for-cor -> wor4cor -> w4c.
 
 #### Forensic Question
-W4C it doing its best to answer the forensic question: Were two (or more) MS Word
- documents last edited/saved on the same MS Word installation instance ?
+W4C is doing its best to help to answer the forensic questions: 
+
+* Were two (or more) MS Word documents last edited/saved on the same MS Word installation instance ?
+* Were these two (or more) MS Word documents created and saved by the same author/company/computer ?
 
 _Note: sometimes the final answer 42 is not good enough :-)_
 
@@ -29,7 +31,7 @@ CLI version: w4c.py     ... python 2.x installed
 GUI version: w4c-gui.py ... python 2.x, tkinter installed
 
 **Note:** self-contained py2exe compiled packages have all dependencies packaged inside package.
- To download windows executable package go to the [release](releases) tab.
+ To download windows executable package go to the [RELEASES](releases) tab.
  
 ### Files
     w4c.py              ... CLI version of Word-Forensic-Correlator
@@ -37,8 +39,8 @@ GUI version: w4c-gui.py ... python 2.x, tkinter installed
     wordfile.py         ... module for OLE2
     wordfingerprint.py  ... module for fingerprinting
     py2exe/             ... directory for py2exe
-    py2exe/setup.py     ... to compile w4c.exe package
-    py2exe/setup-gui.py ... to compile w4c-gui.exe package
+    py2exe/setup.py     ... setup to compile w4c.exe package
+    py2exe/setup-gui.py ... setup to compile w4c-gui.exe package
 
 ### How to use CLI version: w4c.py
 Model situation: you have one (or more) reference document which was saved/edited on 
@@ -92,14 +94,20 @@ already selected the final correlation percentage is calculated and shown.
 $ ./w4c-gui.py
 
 Note: in case of problems make sure tkinter is installed and themes are configured (ubuntu/kubuntu has broken tkinter themes),
- see [_tkinter.TclError BACKGROUND](https://jehurst.wordpress.com/tag/tk-interface/) for more details how to fix broken tkinter themes.
+ see [TK-TclError BACKGROUND](https://jehurst.wordpress.com/tag/tk-interface/) for more details how to fix broken tkinter themes.
  
 ### Windows Executable
-For your convenience Windows 32 bit executables compiled by py2exe are provided in [release](releases) tab. Download the package and unpack it to the working dir.
+For your convenience Windows 32 bit executables compiled by py2exe are provided in [RELEASES](releases) tab. Download the package and unpack it to the working dir.
 
-    w4c-exe.zip is CLI version in single executable file
-    w4c-gui.zip is GUI version with all the dependencies
-     
+    w4c-exe.zip is CLI version in single executable file w4c.exe
+    w4c-gui.zip is GUI version with all the dependencies (w4c-gui.exe)
+
+ _Note: You don't need need to download or install anything else, everything is provided inside the package_
+
+**CLI version** - execute W4C from windows command line interpreter cmd.exe (run -> cmd). Cd to the working directory and execute **W4C.EXE**
+ 
+**GUI version** - execute W4C-GUI by double-click in working directory or create new shortcut for **W4C-GUI.EXE**.
+
 #### Pros
 W4C by using not well known nternal structures should be more tamper/forgery resistant than any other known forensic tools.
  However, please read section bellow to understand the limits.
@@ -108,7 +116,7 @@ W4C by using not well known nternal structures should be more tamper/forgery res
 As far as it is known, MS Word does not provide any clear unique identification (like serial number) within document itself. 
  W4C is trying its best to get the unique fingerprint from document file but there is still probability for false positives.
  
- **False positives** - Eexactly the same MS Word installation (language and service packs levels and settings) might provide matching fingerprint.
+ **False positives** - exactly the same MS Word installation (language and service packs levels and settings) might provide matching fingerprint.
  
  **False negatives** - through the time the installed service packs and settings might change which will result to different fingerprint. 
  Therefore it is recommended to use **reference** document from time range as close as possible to inspected ones to eliminate this. 
