@@ -31,7 +31,7 @@ CLI version: w4c.py     ... python 2.x installed
 GUI version: w4c-gui.py ... python 2.x, tkinter installed
 
 **Note:** self-contained py2exe compiled packages have all dependencies packaged inside package.
- To download windows executable package go to the [RELEASES](releases) tab.
+ To download windows executable package go to the [RELEASES](https://github.com/blue-sky-r/word-forensic-correlator/releases) tab.
  
 ### Files
     w4c.py              ... CLI version of Word-Forensic-Correlator
@@ -97,7 +97,7 @@ Note: in case of problems make sure tkinter is installed and themes are configur
  see [TK-TclError BACKGROUND](https://jehurst.wordpress.com/tag/tk-interface/) for more details how to fix broken tkinter themes.
  
 ### Windows Executable
-For your convenience Windows 32 bit executables compiled by py2exe are provided in [RELEASES](releases) tab. Download the package and unpack it to the working dir.
+For your convenience Windows 32 bit executables compiled by py2exe are provided in [RELEASES](https://github.com/blue-sky-r/word-forensic-correlator/releases) tab. Download the package and unpack it to the working dir.
 
     w4c-exe.zip is CLI version in single executable file w4c.exe
     w4c-gui.zip is GUI version with all the dependencies (w4c-gui.exe)
